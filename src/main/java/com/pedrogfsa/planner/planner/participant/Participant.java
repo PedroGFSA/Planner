@@ -34,8 +34,8 @@ public class Participant {
     private Trip trip;
 
     public Participant(String email, Trip trip) {
+        this.name = "";
         this.isConfirmed = false;
-        this.name = null;
         this.email = email;
         this.trip = trip;
     }
