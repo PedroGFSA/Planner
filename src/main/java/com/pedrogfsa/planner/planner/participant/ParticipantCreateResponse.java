@@ -1,0 +1,6 @@
+package com.pedrogfsa.planner.planner.participant;
+
+import java.util.UUID;
+
+public record ParticipantCreateResponse(UUID id) {
+}
