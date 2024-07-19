@@ -4,6 +4,10 @@ import com.pedrogfsa.planner.planner.activity.ActivityData;
 import com.pedrogfsa.planner.planner.activity.ActivityRequestPayload;
 import com.pedrogfsa.planner.planner.activity.ActivityResponse;
 import com.pedrogfsa.planner.planner.activity.ActivityService;
+import com.pedrogfsa.planner.planner.link.LinkData;
+import com.pedrogfsa.planner.planner.link.LinkRequestPayload;
+import com.pedrogfsa.planner.planner.link.LinkResponse;
+import com.pedrogfsa.planner.planner.link.LinkService;
 import com.pedrogfsa.planner.planner.participant.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +31,9 @@ public class TripController {
 
     @Autowired
     private ActivityService activityService;
+
+    @Autowired
+    private LinkService linkService;
 
     // TRIPS
 
@@ -110,5 +117,22 @@ public class TripController {
         return ResponseEntity.ok(activities);
     }
 
+    // LINKS
 
+    @PostMapping("/{id}/links")
+    public ResponseEntity<LinkResponse> registerLink(@PathVariable UUID id, @RequestBody LinkRequestPayload payload) {
+        Optional<Trip> trip = this.repository.findById(id);
+        if(trip.isPresent()) {
+            Trip rawTrip = trip.get();
+            LinkResponse linkResponse = this.linkService.registerLink(payload, rawTrip);
+            return ResponseEntity.ok(linkResponse);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/{id}/links")
+    public ResponseEntity<List<LinkData>> getAllLinks(@PathVariable UUID id) {
+        List<LinkData> linkDataList = this.linkService.getAllLinksFromTrip(id);
+        return ResponseEntity.ok(linkDataList);
+    }
 }
